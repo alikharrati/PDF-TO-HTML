@@ -27,15 +27,13 @@ function convertPdfToHtml() {
         if (!response.ok) {
             throw new Error("Error converting PDF to HTML: " + response.statusText);
         }
-        return response.text();  // دریافت نتیجه به صورت HTML
+        return response.blob();  // دریافت نتیجه به صورت Blob
     })
-    .then(html => {
-        // ایجاد یک Blob برای فایل HTML
-        const blob = new Blob([html], { type: 'text/html' });
-        
+    .then(blob => {
         // ایجاد یک لینک برای دانلود فایل
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
         link.download = 'converted.html';  // نام فایل HTML که دانلود خواهد شد
         
         // افزودن لینک به صفحه و کلیک خودکار بر روی آن برای دانلود
@@ -44,6 +42,9 @@ function convertPdfToHtml() {
         
         // حذف لینک پس از دانلود
         document.body.removeChild(link);
+        
+        // آزاد کردن URL موقت
+        window.URL.revokeObjectURL(url);
     })
     .catch(error => {
         console.error("Error occurred: ", error);
