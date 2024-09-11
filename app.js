@@ -11,7 +11,7 @@ function convertPdfToText() {
     const formData = new FormData();
     formData.append('file', pdfFile);
 
-    fetch('https://api.pdfcrowd.com/convert/pdf-to-text/', {
+    fetch('https://api.pdfcrowd.com/v2/pdf/convert/to/text/', {
         method: 'POST',
         headers: {
             'Authorization': 'Basic ' + btoa(username + ':' + apiKey),
