@@ -13,6 +13,8 @@ function convertPdfToHtml() {
     formData.append('input_format', 'pdf');
     formData.append('output_format', 'html');
 
+    console.log("Sending request to PDFCROWD API...");
+
     // ارسال درخواست به PDFCROWD API برای تبدیل به HTML
     fetch('https://api.pdfcrowd.com/convert/24.04/', {
         method: 'POST',
@@ -25,12 +27,14 @@ function convertPdfToHtml() {
         if (!response.ok) {
             throw new Error("Error converting PDF to HTML: " + response.statusText);
         }
+        console.log("Request successful, parsing response...");
         return response.text();  // دریافت نتیجه به صورت HTML
     })
     .then(html => {
         document.getElementById('result').innerHTML = html;  // نمایش HTML در صفحه
+        console.log("HTML content displayed on the page.");
     })
     .catch(error => {
-        console.error(error);
+        console.error("Error occurred: ", error);
     });
 }
