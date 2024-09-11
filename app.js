@@ -27,12 +27,23 @@ function convertPdfToHtml() {
         if (!response.ok) {
             throw new Error("Error converting PDF to HTML: " + response.statusText);
         }
-        console.log("Request successful, parsing response...");
         return response.text();  // دریافت نتیجه به صورت HTML
     })
     .then(html => {
-        document.getElementById('result').innerHTML = html;  // نمایش HTML در صفحه
-        console.log("HTML content displayed on the page.");
+        // ایجاد یک Blob برای فایل HTML
+        const blob = new Blob([html], { type: 'text/html' });
+        
+        // ایجاد یک لینک برای دانلود فایل
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'converted.html';  // نام فایل HTML که دانلود خواهد شد
+        
+        // افزودن لینک به صفحه و کلیک خودکار بر روی آن برای دانلود
+        document.body.appendChild(link);
+        link.click();
+        
+        // حذف لینک پس از دانلود
+        document.body.removeChild(link);
     })
     .catch(error => {
         console.error("Error occurred: ", error);
