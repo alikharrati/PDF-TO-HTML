@@ -1,6 +1,6 @@
 function convertPdfToText() {
-    const apiKey = '92cb624e0c7213e092cf98e96d282390'; // جایگزین با کلید API شما
-    const username = 'alikharrati'; // جایگزین با نام کاربری شما
+    const apiKey = '92cb624e0c7213e092cf98e96d282390'; // کلید API خود را جایگزین کنید
+    const username = 'alikharrati'; // نام کاربری خود را جایگزین کنید
 
     const pdfFile = document.getElementById('pdfFile').files[0];
     if (!pdfFile) {
@@ -10,19 +10,27 @@ function convertPdfToText() {
 
     const formData = new FormData();
     formData.append('file', pdfFile);
+    formData.append('input_format', 'pdf');
+    formData.append('output_format', 'txt');
 
-    fetch('https://api.pdfcrowd.com/v2/pdf/convert/to/text/', {
+    // ارسال درخواست به PDFCROWD API
+    fetch('https://api.pdfcrowd.com/convert/24.04/', {
         method: 'POST',
         headers: {
             'Authorization': 'Basic ' + btoa(username + ':' + apiKey),
         },
         body: formData
     })
-    .then(response => response.text())  // تبدیل پاسخ به متن
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Error converting PDF to text: " + response.statusText);
+        }
+        return response.text();  // دریافت نتیجه به صورت متن
+    })
     .then(text => {
         document.getElementById('result').innerText = text;  // نمایش متن در صفحه
     })
     .catch(error => {
-        console.error("Error converting PDF to text:", error);
+        console.error(error);
     });
 }
